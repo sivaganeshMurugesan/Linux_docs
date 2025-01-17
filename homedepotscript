@@ -1,0 +1,15 @@
+#!/bin/bash
+
+directory= "usr/local/bin"
+threshold=80
+diskusage=[df -h "$directory" | awk 'NR==2' {print $5} | sed 's/%//']
+if [diskusage > 80]; then
+  findOldFile= $(find "$directory" -f -exec ls -lt {} | taile -n 1 | awk '{print $9}')
+  if [-n "$findOldFile"]; then
+    rm -f "$findOldFile"
+  else
+    echo "No file found."
+  fi
+else
+  echo"it is under threshold"
+fi
